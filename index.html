@@ -48,32 +48,25 @@
         }
       }
 
-      .d-flex {
-        display: flex;
+      @media only screen and (max-width: 600px) {
+        body {
+          background-size: initial;
+        }
       }
     </style>
   </head>
 
-  <body>
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-    <div class="jelly"></div>
-  </body>
+  <body></body>
   <script>
-    const element = document.querySelectorAll(".jelly");
+    for (let i = 0; i < 25; i++) {
+      const body = document.querySelector("body");
+      const newDiv = document.createElement("div");
+      newDiv.classList.add("jelly");
+      body.appendChild(newDiv);
+    }
+
     function setDefaultPosition() {
+      const element = document.querySelectorAll(".jelly");
       function getRandomPosition(item) {
         const maxX = window.innerWidth - item.offsetWidth;
         const maxY = window.innerHeight - item.offsetHeight;
@@ -90,6 +83,7 @@
     }
 
     function moveRandomly() {
+      const element = document.querySelectorAll(".jelly");
       setDefaultPosition();
       function move(item) {
         element.forEach((item) => {
@@ -119,6 +113,6 @@
       setInterval(move, 500); // 每秒移動一次，你可以調整這個值
     }
 
-    window.onload = moveRandomly;
+    moveRandomly();
   </script>
 </html>
