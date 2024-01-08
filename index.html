@@ -32,19 +32,19 @@
       @keyframes jelly {
         0%,
         100% {
-          transform: scale(1, 1);
+          transform: scale(1, 1) rotate(3deg);
         }
 
         25% {
-          transform: scale(1.1, 0.9);
+          transform: scale(1.1, 0.9) rotate(0deg);
         }
 
         50% {
-          transform: scale(0.9, 1.1);
+          transform: scale(0.9, 1.1) rotate(-3deg);
         }
 
         75% {
-          transform: scale(1.1, 0.9);
+          transform: scale(1.1, 0.9) rotate(0deg);
         }
       }
 
@@ -58,61 +58,70 @@
 
   <body></body>
   <script>
-    for (let i = 0; i < 25; i++) {
-      const body = document.querySelector("body");
-      const newDiv = document.createElement("div");
-      newDiv.classList.add("jelly");
-      body.appendChild(newDiv);
-    }
-
-    function setDefaultPosition() {
-      const element = document.querySelectorAll(".jelly");
-      function getRandomPosition(item) {
+    class Jelly {
+      constructor(interValTime) {
+        this.interValTime = interValTime;
+        this.el = this.createElement();
+        this.setDefaultPosition();
+        this.move();
+      }
+      createElement() {
+        const body = document.querySelector("body");
+        const newDiv = document.createElement("div");
+        newDiv.classList.add("jelly");
+        body.appendChild(newDiv);
+        return newDiv;
+      }
+      getRandomPosition() {
+        const item = this.el;
         const maxX = window.innerWidth - item.offsetWidth;
         const maxY = window.innerHeight - item.offsetHeight;
         const x = Math.floor(Math.random() * maxX);
         const y = Math.floor(Math.random() * maxY);
         return { x, y };
       }
-      element.forEach((item) => {
-        const newPosition = getRandomPosition(item);
-        console.log(newPosition);
-        item.style.left = newPosition.x + "px";
-        item.style.top = newPosition.y + "px";
-      });
-    }
-
-    function moveRandomly() {
-      const element = document.querySelectorAll(".jelly");
-      setDefaultPosition();
-      function move(item) {
-        element.forEach((item) => {
-          const maxX = window.innerWidth - item.offsetWidth;
-          const maxY = window.innerHeight - item.offsetHeight;
-          const currentPosition = parseInt(item.style.left);
-          const totalDistance = 100;
-          const halfDistance = totalDistance / 2;
-          const randomDirection = Math.floor(Math.random() * totalDistance);
-          const diff = currentPosition + randomDirection - halfDistance; // 隨機移動 halfDistance 像素
-          const newX = diff;
-          if (newX < 0) {
-            item.style.left = "0px"; // 防止移出左邊界
-          } else if (newX > maxX) {
-            item.style.left = maxX + "px"; // 防止移出右邊界
-          } else {
-            item.style.left = newX + "px";
-          }
-          if (randomDirection > halfDistance) {
-            item.classList.add("jelly-image-reverse");
-          } else {
-            item.classList.remove("jelly-image-reverse");
-          }
-        });
+      setDefaultPosition() {
+        const element = this.el;
+        const newPosition = this.getRandomPosition();
+        element.style.left = newPosition.x + "px";
+        element.style.top = newPosition.y + "px";
       }
-
-      setInterval(move, 500); // 每秒移動一次，你可以調整這個值
+      move() {
+        const item = this.el;
+        const maxX = window.innerWidth - item.offsetWidth;
+        const maxY = window.innerHeight - item.offsetHeight;
+        const currentPosition = parseInt(item.style.left);
+        const totalDistance = 100;
+        const halfDistance = totalDistance / 2;
+        const randomDirection = Math.floor(Math.random() * totalDistance);
+        const diff = currentPosition + randomDirection - halfDistance; // 隨機移動 halfDistance 像素
+        const newX = diff;
+        if (newX < 0) {
+          item.style.left = "0px"; // 防止移出左邊界
+        } else if (newX > maxX) {
+          item.style.left = maxX + "px"; // 防止移出右邊界
+        } else {
+          item.style.left = newX + "px";
+        }
+        if (randomDirection > halfDistance) {
+          item.classList.add("jelly-image-reverse");
+        } else {
+          item.classList.remove("jelly-image-reverse");
+        }
+        const ins = this;
+        setTimeout(() => {
+          this.move();
+        }, this.interValTime);
+      }
     }
 
-    moveRandomly();
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+    }
+    for (let i = 0; i < 30; i++) {
+      new Jelly(getRandomInt(500, 1000));
+    }
   </script>
 </html>
